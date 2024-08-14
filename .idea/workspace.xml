@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94e07553-c5a4-4a1d-9ae6-af183b66ff6e" name="Changes" comment="">
+    <list default="true" id="94e07553-c5a4-4a1d-9ae6-af183b66ff6e" name="Changes" comment="CORS Filter">
       <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/CustomerController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/ItemController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/OrderController.java" afterDir="false" />
@@ -12,14 +12,7 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/filter/CORSFilter.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/Customer.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/CustomerProcess.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/util/UtilProcess.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/webapp/META-INF/context.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/posb/HelloServlet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/posb/common/util/UtilProcess.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,11 +113,43 @@
       <updated>1723657387246</updated>
       <workItem from="1723657388303" duration="2076000" />
       <workItem from="1723664599184" duration="661000" />
-      <workItem from="1723665429124" duration="1358000" />
+      <workItem from="1723665429124" duration="1682000" />
     </task>
+    <task id="LOCAL-00001" summary="xml files">
+      <option name="closed" value="true" />
+      <created>1723667060600</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667060600</updated>
+    </task>
+    <task id="LOCAL-00002" summary="util">
+      <option name="closed" value="true" />
+      <created>1723667109319</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667109319</updated>
+    </task>
+    <task id="LOCAL-00003" summary="pom">
+      <option name="closed" value="true" />
+      <created>1723667123004</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667123004</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="xml files" />
+    <MESSAGE value="util" />
+    <MESSAGE value="pom" />
+    <MESSAGE value="CORS Filter" />
+    <option name="LAST_COMMIT_MESSAGE" value="CORS Filter" />
   </component>
 </project>
