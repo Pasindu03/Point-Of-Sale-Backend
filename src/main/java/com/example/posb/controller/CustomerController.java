@@ -38,27 +38,74 @@ public class CustomerController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
 
+        var studentId = req.getParameter("id");
+        CustomerProcess process = new CustomerProcess();
+
+        try(var writer = resp.getWriter()) {
+            CustomerDto dto = process.getCustomer(studentId, connection);
+            resp.setContentType("application/json");
+            var jsonb = JsonbBuilder.create();
+            jsonb.toJson(dto, writer);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try(var writer = resp.getWriter()) {
             Jsonb jsonb = JsonbBuilder.create();
             CustomerDto dto = jsonb.fromJson(req.getReader(), CustomerDto.class);
             CustomerProcess customerProcess = new CustomerProcess();
             writer.write(customerProcess.saveCustomer(dto, connection));
             resp.setStatus(HttpServletResponse.SC_CREATED);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-    }
-
-    @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
+        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
+            //error
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        }
+
+        CustomerProcess cp = new CustomerProcess();
+
+        try(var writer = resp.getWriter()) {
+            var id = req.getParameter("id");
+            Jsonb jsonb = JsonbBuilder.create();
+            CustomerDto dto = jsonb.fromJson(req.getReader(), CustomerDto.class);
+
+            if (cp.updateCustomer(id, dto, connection)){
+                writer.write("Customer Updated");
+            } else {
+                writer.write("Customer Not Updated");
+            }
+            resp.setStatus(HttpServletResponse.SC_ACCEPTED);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doDelete(req, resp);
+        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
+            //error
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        }
+
+        var id = req.getParameter("id");
+        CustomerProcess cp = new CustomerProcess();
+
+        try(var writer = resp.getWriter()) {
+            String dto = cp.deleteCustomer(id, connection);
+            resp.setContentType("application/json");
+            var jsonb = JsonbBuilder.create();
+            jsonb.toJson(dto, writer);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

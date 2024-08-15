@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94e07553-c5a4-4a1d-9ae6-af183b66ff6e" name="Changes" comment="CORS Filter">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/CustomerController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/ItemController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/OrderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/dto/CustomerDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/filter/CORSFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/Customer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/CustomerProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/posb/HelloServlet.java" beforeDir="false" />
+    <list default="true" id="94e07553-c5a4-4a1d-9ae6-af183b66ff6e" name="Changes" comment="other">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/controller/CustomerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/CustomerProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/posb/persistance/CustomerProcess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +18,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -59,21 +56,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Maven.posb [package].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "F:/IJSE - Second Semester/Advanced API Development/Point-Of-Sale-Backend/src/main/webapp",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.posb [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;F:/IJSE - Second Semester/Advanced API Development/Point-Of-Sale-Backend/src/main/webapp&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="F:\IJSE - Second Semester\Advanced API Development\Point-Of-Sale-Backend\src\main\webapp" />
@@ -113,7 +110,8 @@
       <updated>1723657387246</updated>
       <workItem from="1723657388303" duration="2076000" />
       <workItem from="1723664599184" duration="661000" />
-      <workItem from="1723665429124" duration="1682000" />
+      <workItem from="1723665429124" duration="1883000" />
+      <workItem from="1723689761520" duration="9720000" />
     </task>
     <task id="LOCAL-00001" summary="xml files">
       <option name="closed" value="true" />
@@ -139,7 +137,55 @@
       <option name="project" value="LOCAL" />
       <updated>1723667123004</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="CORS Filter">
+      <option name="closed" value="true" />
+      <created>1723667136625</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667136625</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Controllers">
+      <option name="closed" value="true" />
+      <created>1723667164473</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667164473</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Customer Files">
+      <option name="closed" value="true" />
+      <created>1723667183011</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667183011</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Item Files">
+      <option name="closed" value="true" />
+      <created>1723667277147</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667277147</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Order Files">
+      <option name="closed" value="true" />
+      <created>1723667291682</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667291682</updated>
+    </task>
+    <task id="LOCAL-00009" summary="other">
+      <option name="closed" value="true" />
+      <created>1723667300387</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1723667300387</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,6 +196,11 @@
     <MESSAGE value="util" />
     <MESSAGE value="pom" />
     <MESSAGE value="CORS Filter" />
-    <option name="LAST_COMMIT_MESSAGE" value="CORS Filter" />
+    <MESSAGE value="Controllers" />
+    <MESSAGE value="Customer Files" />
+    <MESSAGE value="Item Files" />
+    <MESSAGE value="Order Files" />
+    <MESSAGE value="other" />
+    <option name="LAST_COMMIT_MESSAGE" value="other" />
   </component>
 </project>
