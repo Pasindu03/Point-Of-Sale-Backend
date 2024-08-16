@@ -34,7 +34,6 @@ public class CustomerController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            //error
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
 
@@ -67,7 +66,6 @@ public class CustomerController extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            //error
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
 
@@ -92,7 +90,6 @@ public class CustomerController extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            //error
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
         }
 
