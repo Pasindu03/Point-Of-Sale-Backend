@@ -9,8 +9,8 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDto implements Serializable {
-    private String orderId;
-    private String orderDate;
-    private String customerId;
+public class UserDto implements Serializable {
+    private String userName;
+    private String email;
+    private String password;
 }
