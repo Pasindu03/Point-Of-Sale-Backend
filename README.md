@@ -55,7 +55,7 @@ POS System is a web-based Point of Sale (POS) application developed to handle ba
 
 ## Getting Started
 1. **Prerequisites:** Ensure you have a Java EE environment set up with Tomcat installed.
-2. **Clone the Repository:** `git clone https://github.com/ChathuminiBandara/Lafiesta-Backend`
+2. **Clone the Repository:** `git clone https://github.com/Pasindu03/Point-Of-Sale-Backend`
 3. **Setup Database:** Configure your database settings in `application.properties`.
 4. **Build and Run:** Deploy the WAR file to Tomcat and access the application.
 
