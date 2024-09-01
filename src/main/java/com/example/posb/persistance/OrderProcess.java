@@ -1,4 +1,5 @@
 package com.example.posb.persistance;
 
-public class OrderProcess {
+public class OrderProcess implements Order{
+
 }
