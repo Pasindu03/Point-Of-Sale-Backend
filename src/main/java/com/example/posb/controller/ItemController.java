@@ -11,102 +11,138 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @WebServlet(urlPatterns = "/items")
 public class ItemController extends HttpServlet {
     Connection connection;
-
     @Override
     public void init() throws ServletException {
-        try{
-            var ctx = new InitialContext();
-            DataSource pool = (DataSource) ctx.lookup("java:comp/env/jdbc/pointSale");
+        try {
+            InitialContext ctx = new InitialContext();
+            DataSource pool = (DataSource) ctx.lookup("java:comp/env/jdbc/pos");
             this.connection = pool.getConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NamingException | SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        String action = req.getParameter("action");
+        if (action.equals("generateItemCode")){
+            generateItemCode(req,resp);
+        }else if (action.equals("getAllItem")){
+            getAllItem(req,resp);
+        } else if (action.equals("getItem")) {
+            String code = req.getParameter("itemCode");
+            getItem(req,resp,code);
         }
+    }
 
-        var itemCode = req.getParameter("itemCode");
+    private void generateItemCode(HttpServletRequest req, HttpServletResponse resp){
         ItemProcess process = new ItemProcess();
+        String itemCode = process.generateItemCode(connection);
+        Jsonb jsonb = JsonbBuilder.create();
 
-        try(var writer = resp.getWriter()){
-            ItemDto dto = process.getItem(itemCode, connection);
-            resp.setContentType("application/json");
-            var jsonb = JsonbBuilder.create();
-            jsonb.toJson(dto, writer);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        var json = jsonb.toJson(itemCode);
+        resp.setContentType("application/json");
+        try {
+            resp.getWriter().write(json);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
-        }
-
-        try(var writer = resp.getWriter()) {
+        if (req.getContentType() != null && req.getContentType().toLowerCase().startsWith("application/json")){
             Jsonb jsonb = JsonbBuilder.create();
-            ItemDto dto = jsonb.fromJson(req.getReader(), ItemDto.class);
-            ItemProcess process = new ItemProcess();
-            writer.write(process.saveItem(dto, connection));
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            ItemDto dto = jsonb.fromJson(req.getReader(), ItemProcess.class);
+
+            var process1 = new ItemProcess();
+            boolean result = process1.saveItem(connection, itemDTO);
+
+            if (result){
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write("Item information saved successfully!");
+            }else {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Failed to saved item information!");
+            }
+        }else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
-        }
-
-        ItemProcess process = new ItemProcess();
-
-        try (var writer = resp.getWriter()){
-            var id = req.getParameter("itemCode");
+        if (req.getContentType() != null && req.getContentType().toLowerCase().startsWith("application/json")){
             Jsonb jsonb = JsonbBuilder.create();
-            ItemDto dto = jsonb.fromJson(req.getReader(), ItemDto.class);
+            ItemDTO itemDTO = jsonb.fromJson(req.getReader(), ItemDTO.class);
 
-            if (process.updateItem(id, dto, connection)) {
-                writer.write("Item Updated");
-            } else {
-                writer.write("Item Not Updated");
+            var itemDb = new ItemDb();
+            boolean result = itemDb.updateItem(connection, itemDTO);
+
+            if (result){
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write("Customer information updated successfully!");
+            }else {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Failed to saved customer information!");
             }
-            resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-        } catch (Exception e) {
-            e.printStackTrace();
+        }else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        String code = req.getParameter("itemCode");
+        System.out.println(code);
+        var itemDb = new ItemDb();
+        boolean result = itemDb.deleteItem(connection, code);
+
+        if (result){
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write("Customer information deleted successfully!");
+        }else {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Failed to saved customer information!");
         }
+    }
 
-        var id = req.getParameter("itemCode");
-        ItemProcess process = new ItemProcess();
+    private void getAllItem(HttpServletRequest req, HttpServletResponse resp){
+        var itemDb = new ItemDb();
+        ArrayList<ItemDTO> allItem = itemDb.getAllItem(connection);
 
-        try(var writer = resp.getWriter()){
-            String dto = process.deleteItem(id, connection);
-            resp.setContentType("application/json");
-            var jsonb = JsonbBuilder.create();
-            jsonb.toJson(dto, writer);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Jsonb jsonb = JsonbBuilder.create();
+        var json = jsonb.toJson(allItem);
+
+        resp.setContentType("application/json");
+        try {
+            resp.getWriter().write(json);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void getItem(HttpServletRequest req, HttpServletResponse resp, String code){
+        var itemDb = new ItemDb();
+        ItemDTO itemDTO = itemDb.getItem(connection, code);
+        Jsonb jsonb = JsonbBuilder.create();
+
+        var json = jsonb.toJson(itemDTO);
+        resp.setContentType("application/json");
+        try {
+            resp.getWriter().write(json);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
         }
     }
 }
