@@ -25,7 +25,7 @@ public final class CustomerProcess implements Customer {
 
         try {
             var preparedStatement = connection.prepareStatement(SAVE_CUSTOMER);
-            preparedStatement.setLong(1, dto.getCustomerId());
+            preparedStatement.setString(1, dto.getCustomerId());
             preparedStatement.setString(2, dto.getCustomerName());
             preparedStatement.setString(2, dto.getCustomerAddress());
             preparedStatement.setString(2, dto.getCustomerPhone());
@@ -99,7 +99,7 @@ public final class CustomerProcess implements Customer {
             var resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
-                dto.setCustomerId(resultSet.getLong("id"));
+                dto.setCustomerId(resultSet.getString("id"));
                 dto.setCustomerName(resultSet.getString("name"));
                 dto.setCustomerAddress(resultSet.getString("address"));
                 dto.setCustomerPhone(resultSet.getString("mobile"));

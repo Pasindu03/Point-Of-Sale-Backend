@@ -1,6 +1,6 @@
 package com.example.posb.controller;
 
-import com.example.posb.dto.CustomerDto;
+import com.example.posb.persistance.Customer;
 import com.example.posb.persistance.CustomerProcess;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -11,97 +11,139 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @WebServlet(urlPatterns = "/customer")
 public class CustomerController extends HttpServlet {
     Connection connection;
-
     @Override
     public void init() throws ServletException {
-        try{
-            var ctx = new InitialContext();
-            DataSource pool = (DataSource) ctx.lookup("java:comp/env/jdbc/pointSale");
+        try {
+            InitialContext ctx = new InitialContext();
+            DataSource pool = (DataSource) ctx.lookup("java:comp/env/jdbc/pos");
             this.connection = pool.getConnection();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NamingException | SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        String action = req.getParameter("action");
+
+        if (action.equals("generateCustomerId")){
+            generateCustomerId(req,resp);
+        } else if (action.equals("getAllCustomer")) {
+            getAllCustomer(req,resp);
+        } else if (action.equals("getCustomer")) {
+            String custId = req.getParameter("customerId");
+            getCustomer(req,resp,custId);
         }
+    }
 
-        var studentId = req.getParameter("id");
-        CustomerProcess process = new CustomerProcess();
 
-        try(var writer = resp.getWriter()) {
-            CustomerDto dto = process.getCustomer(studentId, connection);
-            resp.setContentType("application/json");
-            var jsonb = JsonbBuilder.create();
-            jsonb.toJson(dto, writer);
-        } catch (SQLException e) {
+
+    private void getCustomer(HttpServletRequest req, HttpServletResponse resp, String custId){
+        var customer = new CustomerProcess();
+        CustomerProcess customerProcess = customer.getCustomer(connection, custId);
+        Jsonb jsonb = JsonbBuilder.create();
+
+        var json = jsonb.toJson(customerProcess);
+        resp.setContentType("application/json");
+        try {
+            resp.getWriter().write(json);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void generateCustomerId(HttpServletRequest req, HttpServletResponse resp){
+        CustomerDb customerDb = new CustomerDb();
+        String customerId = customerDb.generateCustomerId(connection);
+        Jsonb jsonb = JsonbBuilder.create();
+
+        var json = jsonb.toJson(customerId);
+        resp.setContentType("application/json");
+        try {
+            resp.getWriter().write(json);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try(var writer = resp.getWriter()) {
+        if (req.getContentType()!= null && req.getContentType().toLowerCase().startsWith("application/json")){
             Jsonb jsonb = JsonbBuilder.create();
-            CustomerDto dto = jsonb.fromJson(req.getReader(), CustomerDto.class);
-            CustomerProcess customerProcess = new CustomerProcess();
-            writer.write(customerProcess.saveCustomer(dto, connection));
-            resp.setStatus(HttpServletResponse.SC_CREATED);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
+
+            var customerDb = new CustomerDb();
+            boolean result = customerDb.saveCustomer(connection, customerDTO);
+
+            if (result){
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write("Customer information saved successfully!");
+            }else {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Failed to saved customer information!");
+            }
+        }else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
-        }
-
-        CustomerProcess cp = new CustomerProcess();
-
-        try(var writer = resp.getWriter()) {
-            var id = req.getParameter("id");
+        if (req.getContentType() != null && req.getContentType().toLowerCase().startsWith("application/json")){
             Jsonb jsonb = JsonbBuilder.create();
-            CustomerDto dto = jsonb.fromJson(req.getReader(), CustomerDto.class);
+            CustomerDTO customerDTO = jsonb.fromJson(req.getReader(), CustomerDTO.class);
 
-            if (cp.updateCustomer(id, dto, connection)){
-                writer.write("Customer Updated");
-            } else {
-                writer.write("Customer Not Updated");
+            var customerDb = new CustomerDb();
+            boolean result = customerDb.updateCustomer(connection, customerDTO);
+
+            if (result){
+                resp.setStatus(HttpServletResponse.SC_OK);
+                resp.getWriter().write("Customer information updated successfully!");
+            }else {
+                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Failed to saved customer information!");
             }
-            resp.setStatus(HttpServletResponse.SC_ACCEPTED);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        }else {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        if (!req.getContentType().toLowerCase().contains("application/json") || (req.getContentType() == null)){
-            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+        String custId = req.getParameter("customerId");
+        var customerDb = new CustomerDb();
+        boolean result = customerDb.deleteCustomer(connection, custId);
+
+        if (result){
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write("Customer information deleted successfully!");
+        }else {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Failed to saved customer information!");
         }
+    }
 
-        var id = req.getParameter("id");
-        CustomerProcess cp = new CustomerProcess();
+    private void getAllCustomer(HttpServletRequest req, HttpServletResponse resp){
+        var customerDb = new CustomerDb();
+        ArrayList<CustomerDTO> allCustomer = customerDb.getAllCustomer(connection);
 
-        try(var writer = resp.getWriter()) {
-            String dto = cp.deleteCustomer(id, connection);
-            resp.setContentType("application/json");
-            var jsonb = JsonbBuilder.create();
-            jsonb.toJson(dto, writer);
-        } catch (SQLException e) {
+        Jsonb jsonb = JsonbBuilder.create();
+        var json = jsonb.toJson(allCustomer);
+
+        resp.setContentType("application/json");
+        try {
+            resp.getWriter().write(json);
+        } catch (IOException e) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             throw new RuntimeException(e);
         }
     }
